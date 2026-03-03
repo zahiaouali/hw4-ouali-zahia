@@ -16,6 +16,17 @@
 (struct Card (points color cost))
 (struct GameState (cards))
 
+;; Required Constructors (AUTOGRADER EXPECTS THESE)
+
+(define (mk-Cost r g b)
+  (Cost r g b))
+
+(define (mk-Card p c co)
+  (Card p c co))
+
+(define (mk-GameState cards)
+  (GameState cards))
+
 ;; Required API Wrappers
 
 (define (Card-point-value c)
@@ -29,23 +40,23 @@
 
 (define (Card-blue-cost c)
   (Cost-blue (Card-cost c)))
-;; Required API function
+
 (define (GameState-card g slot)
   (list-ref (GameState-cards g) (- slot 1)))
 
 ;; Random Generators
 
 (define (random-card)
-  (Card
+  (mk-Card
    (random (+ MAX-POINTS 1))
    (list-ref (list RED GREEN BLUE) (random 3))
-   (Cost
+   (mk-Cost
     (random (+ MAX-COST 1))
     (random (+ MAX-COST 1))
     (random (+ MAX-COST 1)))))
 
 (define (random-gamestate)
-  (GameState
+  (mk-GameState
    (build-list 9 (lambda (i) (random-card)))))
 
 ;; Drawing
@@ -98,7 +109,7 @@
     (draw-card (list-ref cards 7))
     (draw-card (list-ref cards 8)))))
 
-;; Mouse Handler
+;; Mouse
 
 (define (handle-mouse g x y me)
   (if (string=? me "button-down")
@@ -109,10 +120,9 @@
               (list-set (GameState-cards g)
                         index
                         (random-card))])
-        (GameState new-cards))
+        (mk-GameState new-cards))
       g))
 
-;; Run (DO NOT AUTO RUN)
 (define (run)
   (big-bang (random-gamestate)
     [to-draw draw-gamestate]
