@@ -12,40 +12,44 @@
 (define BLUE "blue")
 
 ;; Data Definitions
-(struct cost (red green blue))
-(struct card (points color cost))
-(struct gamestate (cards))
+(struct Cost (red green blue))
+(struct Card (points color cost))
+(struct GameState (cards))
 
-;; Required Constructors (AUTOGRADER)
-(define (mk-Cost r g b)
-  (cost r g b))
+;; Required API Wrappers
 
-(define (mk-Card p c co)
-  (card p c co))
+(define (Card-point-value c)
+  (Card-points c))
 
-(define (mk-GameState cards)
-  (gamestate cards))
+(define (Card-red-cost c)
+  (Cost-red (Card-cost c)))
 
-;; Required Function
+(define (Card-green-cost c)
+  (Cost-green (Card-cost c)))
+
+(define (Card-blue-cost c)
+  (Cost-blue (Card-cost c)))
+;; Required API function
 (define (GameState-card g slot)
-  (list-ref (gamestate-cards g) (- slot 1)))
+  (list-ref (GameState-cards g) (- slot 1)))
 
 ;; Random Generators
 
 (define (random-card)
-  (mk-Card
+  (Card
    (random (+ MAX-POINTS 1))
    (list-ref (list RED GREEN BLUE) (random 3))
-   (mk-Cost
+   (Cost
     (random (+ MAX-COST 1))
     (random (+ MAX-COST 1))
     (random (+ MAX-COST 1)))))
 
 (define (random-gamestate)
-  (mk-GameState
+  (GameState
    (build-list 9 (lambda (i) (random-card)))))
 
 ;; Drawing
+
 (define THIRD (/ CARD-SIZE 3))
 
 (define (draw-card c)
@@ -54,9 +58,9 @@
     (overlay/align
      "left" "center"
      (overlay
-      (text (number->string (card-points c)) 20 "black")
+      (text (number->string (Card-points c)) 20 "black")
       (square THIRD "solid" "white"))
-     (rectangle CARD-SIZE THIRD "solid" (card-color c))))
+     (rectangle CARD-SIZE THIRD "solid" (Card-color c))))
 
   (define middle-section
     (rectangle CARD-SIZE THIRD "solid" "white"))
@@ -64,19 +68,19 @@
   (define bottom-section
     (beside
      (overlay
-      (text (number->string (cost-red (card-cost c))) 15 "black")
+      (text (number->string (Cost-red (Card-cost c))) 15 "black")
       (circle (/ THIRD 2) "solid" RED))
      (overlay
-      (text (number->string (cost-green (card-cost c))) 15 "black")
+      (text (number->string (Cost-green (Card-cost c))) 15 "black")
       (circle (/ THIRD 2) "solid" GREEN))
      (overlay
-      (text (number->string (cost-blue (card-cost c))) 15 "black")
+      (text (number->string (Cost-blue (Card-cost c))) 15 "black")
       (circle (/ THIRD 2) "solid" BLUE))))
 
   (above top-section middle-section bottom-section))
 
 (define (draw-gamestate g)
-  (define cards (gamestate-cards g))
+  (define cards (GameState-cards g))
 
   (above
    (beside
@@ -102,13 +106,13 @@
              [row (quotient y CARD-SIZE)]
              [index (+ (* row 3) col)]
              [new-cards
-              (list-set (gamestate-cards g)
+              (list-set (GameState-cards g)
                         index
                         (random-card))])
-        (mk-GameState new-cards))
+        (GameState new-cards))
       g))
 
-;; Run
+;; Run (DO NOT AUTO RUN)
 (define (run)
   (big-bang (random-gamestate)
     [to-draw draw-gamestate]
