@@ -112,15 +112,15 @@
 ;; Mouse
 (define (handle-mouse g x y me)
   (if (string=? me "button-down")
-      (let* ([col (quotient x CARD-SIZE)]
-             [row (quotient y CARD-SIZE)]
-             [index (+ (* row 3) col)]
-             [cards (GameState-cards g)])
-        (if (and (>= col 0) (< col 3)
-                 (>= row 0) (< row 3))
+      (if (and (>= x 0) (< x (* 3 CARD-SIZE))
+               (>= y 0) (< y (* 3 CARD-SIZE)))
+          (let* ([col (quotient x CARD-SIZE)]
+                 [row (quotient y CARD-SIZE)]
+                 [index (+ (* row 3) col)]
+                 [cards (GameState-cards g)])
             (mk-GameState
-             (list-set cards index (random-card)))
-            g))
+             (list-set cards index (random-card))))
+          g)
       g))
 
 (define (run)
