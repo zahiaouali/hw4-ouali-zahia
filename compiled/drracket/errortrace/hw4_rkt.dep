@@ -1,1 +1,0 @@
-("9.0" ta6nt ("d9dd80e87837b247e29602166598a2f2d1f5e45c" . "bfe9626febaec389df877dd5c1a80df27b135443") (collects #"2htdp" #"image.rkt") (collects #"2htdp" #"universe.rkt") (collects #"drracket" #"private" #"drracket-errortrace-key.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"racket450" #"lang" #"reader.rkt") (collects #"racket450" #"main.rkt"))
