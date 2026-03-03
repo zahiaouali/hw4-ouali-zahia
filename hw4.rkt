@@ -110,17 +110,17 @@
     (draw-card (list-ref cards 8)))))
 
 ;; Mouse
-
 (define (handle-mouse g x y me)
   (if (string=? me "button-down")
       (let* ([col (quotient x CARD-SIZE)]
              [row (quotient y CARD-SIZE)]
              [index (+ (* row 3) col)]
-             [new-cards
-              (list-set (GameState-cards g)
-                        index
-                        (random-card))])
-        (mk-GameState new-cards))
+             [cards (GameState-cards g)])
+        (if (and (>= col 0) (< col 3)
+                 (>= row 0) (< row 3))
+            (mk-GameState
+             (list-set cards index (random-card)))
+            g))
       g))
 
 (define (run)
